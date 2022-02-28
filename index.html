@@ -1,0 +1,514 @@
+<html>
+
+<head>
+     
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <style>
+        body {
+            font-family: Calibri, Segoe, "Segoe UI", "Gill Sans", "Gill Sans MT", sans-serif;
+        }
+        /* It's supposed to look like a tree diagram */
+        
+        .tree,
+        .tree ul,
+        .tree li {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            position: relative;
+        }
+        
+        .tree {
+            margin: 0 0 1em;
+            text-align: center;
+        }
+        
+        .tree,
+        .tree ul {
+            display: table;
+        }
+        
+        .tree ul {
+            width: 100%;
+        }
+        
+        .tree li {
+            display: table-cell;
+            padding: .5em 0;
+            vertical-align: top;
+        }
+        /* _________ */
+        
+        .tree li:before {
+            outline: solid 1px #666;
+            content: "";
+            left: 0;
+            position: absolute;
+            right: 0;
+            top: 0;
+        }
+        
+        .tree li:first-child:before {
+            left: 50%;
+        }
+        
+        .tree li:last-child:before {
+            right: 50%;
+        }
+        
+        .tree code,
+        .tree span {
+            border: solid .1em #666;
+            border-radius: .2em;
+            display: inline-block;
+            margin: 0 .2em .5em;
+            padding: .2em .5em;
+            position: relative;
+        }
+        /* If the tree represents DOM structure */
+        
+        .tree code {
+            font-family: monaco, Consolas, 'Lucida Console', monospace;
+        }
+        /* | */
+        
+        .tree ul:before,
+        .tree code:before,
+        .tree span:before {
+            outline: solid 1px #666;
+            content: "";
+            height: .5em;
+            left: 50%;
+            position: absolute;
+        }
+        
+        .tree ul:before {
+            top: -.5em;
+        }
+        
+        .tree code:before,
+        .tree span:before {
+            top: -.55em;
+        }
+        /* The root node doesn't connect upwards */
+        
+        .tree>li {
+            margin-top: 0;
+        }
+        
+        .tree>li:before,
+        .tree>li:after,
+        .tree>li>code:before,
+        .tree>li>span:before {
+            outline: none;
+        }
+        
+        body {
+            background-color: #E6E6E6;
+        }
+        
+        .navbar {
+            overflow: hidden;
+            background-color: #B3B3B3;
+            position: fixed;
+            /* Set the navbar to fixed position */
+            top: 0;
+            /* Position the navbar at the top of the page */
+            width: 100%;
+            /* Full width */
+        }
+        
+        .navbar a {
+            float: left;
+            display: block;
+            color: #f2f2f2;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+        
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+            table-layout: fixed;
+        }
+        
+        td,
+        th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+        
+        .ten {
+            width: 10%;
+        }
+        
+        .twenty {
+            width: 20%;
+        }
+        
+        .fifty {
+            width: 50%;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+        
+        .container {
+            box-shadow: 5px 5px 5px grey;
+            background-color: white;
+            text-align: left;
+            margin-top: 80px;
+            margin-left: 2%;
+            margin-right: 2%;
+            padding: 100px 16px;
+        }
+        
+        .collapsible {
+            background-color: #777;
+            color: white;
+            cursor: pointer;
+            padding: 18px;
+            border: none;
+            text-align: left;
+            outline: none;
+            font-size: 15px;
+            margin-left: 2%;
+            margin-right: 2%;
+        }
+        
+        table,
+        td,
+        th {
+            border: none;
+        }
+        
+        .active,
+        .collapsible:hover {
+            background-color: #555;
+        }
+        
+        .content {
+            padding: 0 18px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.2s ease-out;
+            background-color: #f1f1f1;
+            margin-left: 2%;
+            margin-right: 2%;
+        }
+        
+        .button {
+            font: bold 11px Arial;
+            text-decoration: none;
+            background-color: #EEEEEE;
+            color: #333333;
+            padding: 2px 6px 2px 6px;
+            border-top: 1px solid #CCCCCC;
+            border-right: 1px solid #333333;
+            border-bottom: 1px solid #333333;
+            border-left: 1px solid #CCCCCC;
+        }
+    </style>
+    
+<link rel="stylesheet" href="templates/tree.css"> 
+</head>
+
+<body>
+    <div class="navbar">
+        <a href="./index.html">Trace Analysis Report</a>
+    </div>
+    
+<div style="margin-top: 60px"></div>
+<h2 style="text-align: center;">Rate-based root cause analysis</h2>
+
+<div class="collapsible">
+    <table class="singleTab">
+        <colgroup>
+            <col class="fifty" />
+            <col class="ten" />
+            <col class="ten" />
+        </colgroup>
+        <tr>
+            <td>[Errno -3] Temporary failure in name resolution</td>
+            <td><span align="left" class="glyphicon glyphicon-time"></span> 35 &#181;s</td>
+            <td><span align="left" class="glyphicon glyphicon-star"></span> 3</td>
+        </tr>
+    </table>
+</div>
+<div class="content">
+    <table>
+        <colgroup>
+            <col class="fifty" />
+            <col class="fifty" />
+        </colgroup>
+        <tr>
+            <td>
+                <table>
+                    
+                    <tr>
+                        <td>input.args</td>
+                        <td>(<paramiko_tracing.TracingSSHClient object at 0x7f079ee64040>, 'ssh-python-server')</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>input.port</td>
+                        <td>22</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>input.username</td>
+                        <td>root</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>input.password</td>
+                        <td>root</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>error</td>
+                        <td>True</td>
+                    </tr>
+                    
+                </table>
+            </td>
+            <td>Traceback (most recent call last):
+  File "/code/debug_tracing.py", line 25, in wrapper
+    result = func(*args, **kwargs)
+  File "/code/paramiko_tracing.py", line 9, in connect
+    return super().connect(*args, **kwargs)
+  File "/usr/local/lib/python3.8/site-packages/paramiko/client.py", line 340, in connect
+    to_try = list(self._families_and_addresses(hostname, port))
+  File "/usr/local/lib/python3.8/site-packages/paramiko/client.py", line 203, in _families_and_addresses
+    addrinfos = socket.getaddrinfo(
+  File "/usr/local/lib/python3.8/socket.py", line 918, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+socket.gaierror: [Errno -3] Temporary failure in name resolution
+
+            </td>
+        </tr>
+    </table>
+</div>
+
+<div class="collapsible">
+    <table class="singleTab">
+        <colgroup>
+            <col class="fifty" />
+            <col class="ten" />
+            <col class="ten" />
+        </colgroup>
+        <tr>
+            <td>'NoneType' object has no attribute 'open_session'</td>
+            <td><span align="left" class="glyphicon glyphicon-time"></span> 22 &#181;s</td>
+            <td><span align="left" class="glyphicon glyphicon-star"></span> 2</td>
+        </tr>
+    </table>
+</div>
+<div class="content">
+    <table>
+        <colgroup>
+            <col class="fifty" />
+            <col class="fifty" />
+        </colgroup>
+        <tr>
+            <td>
+                <table>
+                    
+                    <tr>
+                        <td>input.args</td>
+                        <td>(<paramiko_tracing.TracingSSHClient object at 0x7f079ee64040>, 'ls -l')</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>error</td>
+                        <td>True</td>
+                    </tr>
+                    
+                </table>
+            </td>
+            <td>Traceback (most recent call last):
+  File "/code/debug_tracing.py", line 25, in wrapper
+    result = func(*args, **kwargs)
+  File "/code/paramiko_tracing.py", line 13, in exec_command
+    return super().exec_command(*args, **kwargs)
+  File "/usr/local/lib/python3.8/site-packages/paramiko/client.py", line 510, in exec_command
+    chan = self._transport.open_session(timeout=timeout)
+AttributeError: 'NoneType' object has no attribute 'open_session'
+
+            </td>
+        </tr>
+    </table>
+</div>
+
+<div class="collapsible">
+    <table class="singleTab">
+        <colgroup>
+            <col class="fifty" />
+            <col class="ten" />
+            <col class="ten" />
+        </colgroup>
+        <tr>
+            <td>cannot unpack non-iterable NoneType object</td>
+            <td><span align="left" class="glyphicon glyphicon-time"></span> 72 &#181;s</td>
+            <td><span align="left" class="glyphicon glyphicon-star"></span> 1.6</td>
+        </tr>
+    </table>
+</div>
+<div class="content">
+    <table>
+        <colgroup>
+            <col class="fifty" />
+            <col class="fifty" />
+        </colgroup>
+        <tr>
+            <td>
+                <table>
+                    
+                    <tr>
+                        <td>span.kind</td>
+                        <td>server</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>component</td>
+                        <td>Celery</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>celery.task_name</td>
+                        <td>scripts.run_script</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>peer.location</td>
+                        <td>internal</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>celery.task_id</td>
+                        <td>961f985c-5646-4ec3-8752-111d953aa74c</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>input.args</td>
+                        <td>(1, 2)</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>error</td>
+                        <td>True</td>
+                    </tr>
+                    
+                </table>
+            </td>
+            <td>Traceback (most recent call last):
+  File "/code/debug_tracing.py", line 25, in wrapper
+    result = func(*args, **kwargs)
+  File "/code/main.py", line 51, in run_script
+    result = run.run_bash(ssh, script)
+  File "/code/run.py", line 37, in run_bash
+    stdin, stdout, stderr = ssh.exec_command(content)
+TypeError: cannot unpack non-iterable NoneType object
+
+            </td>
+        </tr>
+    </table>
+</div>
+
+<h2 style="text-align: center;">Chain-based root cause analysis</h2>
+
+<ol>
+    
+    <li>[Errno -3] Temporary failure in name resolution</li>
+    
+    <li>cannot unpack non-iterable NoneType object</li>
+    
+</ol>
+
+<h2 style="text-align: center;">Tree-based root cause analysis</h2>
+<div>
+    <ul class="tree">
+<li> <span>run_task</span>
+<ul>
+<li> <span>publish hello.run_script_output_to_storage</span>
+</li>
+<li> <span>Celery:run:hello.run_script_output_to_storage</span>
+<ul>
+<li> <span>Celery:apply_async:scripts.run_script</span>
+<ul>
+<li> <span style="color:red">Celery:run:scripts.run_script: cannot unpack non-iterable NoneType object</span>
+<ul>
+<li> <span>GET</span>
+<ul>
+<li> <span>DocViewSet</span>
+<ul>
+<li> <span>MySQLdb:Connect</span>
+</li>
+<li> <span>MySQLdb:SET</span>
+</li>
+<li> <span>MySQLdb:SELECT</span>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li> <span>GET</span>
+<ul>
+<li> <span>PeerViewSet</span>
+<ul>
+<li> <span>MySQLdb:Connect</span>
+</li>
+<li> <span>MySQLdb:SET</span>
+</li>
+<li> <span>MySQLdb:SELECT</span>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li> <span style="color:red">connect: [Errno -3] Temporary failure in name resolution</span>
+</li>
+<li> <span style="color:red">exec_command: 'NoneType' object has no attribute 'open_session'</span>
+</li>
+<li> <span>Celery:apply_async:storage.put_content</span>
+<ul>
+<li> <span>Celery:run:storage.put_content</span>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+</div>
+
+
+    <script>
+        var coll = document.getElementsByClassName("collapsible");
+        var i;
+
+        for (i = 0; i < coll.length; i++) {
+            coll[i].addEventListener("click", function() {
+                this.classList.toggle("active");
+                var content = this.nextElementSibling;
+                if (content.style.maxHeight) {
+                    content.style.maxHeight = null;
+                } else {
+                    content.style.maxHeight = content.scrollHeight + "px";
+                }
+            });
+        }
+    </script>
+</body>
